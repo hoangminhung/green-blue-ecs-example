@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "this" {
-  bucket        = "example-app-codepipeline"
+  bucket        = "example-app-codepipeline01"
   force_destroy = true
 }
 
