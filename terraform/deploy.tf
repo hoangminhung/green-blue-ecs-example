@@ -18,7 +18,7 @@ data "aws_iam_policy_document" "assume_by_pipeline" {
 
 resource "aws_iam_role" "pipeline" {
   name               = "pipeline-example-role"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_by_pipeline.json}"
+  assume_role_policy = data.aws_iam_policy_document.assume_by_pipeline.json
 }
 
 data "aws_iam_policy_document" "pipeline" {
@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "pipeline" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}",
+      aws_s3_bucket.this.arn,
       "${aws_s3_bucket.this.arn}/*",
     ]
   }
@@ -47,7 +47,7 @@ data "aws_iam_policy_document" "pipeline" {
       "codebuild:StartBuild",
     ]
 
-    resources = ["${aws_codebuild_project.this.arn}"]
+    resources = [aws_codebuild_project.this.arn]
   }
 
   statement {
@@ -92,8 +92,8 @@ data "aws_iam_policy_document" "pipeline" {
 }
 
 resource "aws_iam_role_policy" "pipeline" {
-  role   = "${aws_iam_role.pipeline.name}"
-  policy = "${data.aws_iam_policy_document.pipeline.json}"
+  role   = aws_iam_role.pipeline.name
+  policy = data.aws_iam_policy_document.pipeline.json
 }
 
 data "aws_iam_policy_document" "assume_by_codebuild" {
@@ -111,7 +111,7 @@ data "aws_iam_policy_document" "assume_by_codebuild" {
 
 resource "aws_iam_role" "codebuild" {
   name               = "codebuild-example-role"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_by_codebuild.json}"
+  assume_role_policy = data.aws_iam_policy_document.assume_by_codebuild.json
 }
 
 data "aws_iam_policy_document" "codebuild" {
@@ -126,7 +126,7 @@ data "aws_iam_policy_document" "codebuild" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}",
+      aws_s3_bucket.this.arn,
       "${aws_s3_bucket.this.arn}/*",
     ]
   }
@@ -152,7 +152,7 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:PutImage",
     ]
 
-    resources = ["${data.aws_ecr_repository.this.arn}"]
+    resources = [data.aws_ecr_repository.this.arn]
   }
 
   statement {
@@ -177,14 +177,14 @@ data "aws_iam_policy_document" "codebuild" {
 }
 
 resource "aws_iam_role_policy" "codebuild" {
-  role   = "${aws_iam_role.codebuild.name}"
-  policy = "${data.aws_iam_policy_document.codebuild.json}"
+  role   = aws_iam_role.codebuild.name
+  policy = data.aws_iam_policy_document.codebuild.json
 }
 
 resource "aws_codebuild_project" "this" {
   name         = "example-codebuild"
   description  = "Codebuild for the ECS Green/Blue Example app"
-  service_role = "${aws_iam_role.codebuild.arn}"
+  service_role = aws_iam_role.codebuild.arn
 
   artifacts {
     type = "CODEPIPELINE"
@@ -198,7 +198,7 @@ resource "aws_codebuild_project" "this" {
 
     environment_variable {
       name  = "REPOSITORY_URI"
-      value = "${data.aws_ecr_repository.this.repository_url}"
+      value = data.aws_ecr_repository.this.repository_url
     }
 
     environment_variable {
@@ -208,27 +208,27 @@ resource "aws_codebuild_project" "this" {
 
     environment_variable {
       name  = "CONTAINER_NAME"
-      value = "${local.container_name}"
+      value = local.container_name
     }
 
     environment_variable {
       name  = "SUBNET_1"
-      value = "${aws_subnet.this.*.id[0]}"
+      value = aws_subnet.this[0].id
     }
 
     environment_variable {
       name  = "SUBNET_2"
-      value = "${aws_subnet.this.*.id[1]}"
+      value = aws_subnet.this[1].id
     }
 
     environment_variable {
       name  = "SUBNET_3"
-      value = "${aws_subnet.this.*.id[2]}"
+      value = aws_subnet.this[2].id
     }
 
     environment_variable {
       name  = "SECURITY_GROUP"
-      value = "${aws_security_group.ecs.id}"
+      value = aws_security_group.ecs.id
     }
   }
 
@@ -252,7 +252,7 @@ data "aws_iam_policy_document" "assume_by_codedeploy" {
 
 resource "aws_iam_role" "codedeploy" {
   name               = "codedeploy"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_by_codedeploy.json}"
+  assume_role_policy = data.aws_iam_policy_document.assume_by_codedeploy.json
 }
 
 data "aws_iam_policy_document" "codedeploy" {
@@ -291,15 +291,15 @@ data "aws_iam_policy_document" "codedeploy" {
     actions = ["iam:PassRole"]
 
     resources = [
-      "${aws_iam_role.execution_role.arn}",
-      "${aws_iam_role.task_role.arn}",
+      aws_iam_role.execution_role.arn,
+      aws_iam_role.task_role.arn,
     ]
   }
 }
 
 resource "aws_iam_role_policy" "codedeploy" {
-  role   = "${aws_iam_role.codedeploy.name}"
-  policy = "${data.aws_iam_policy_document.codedeploy.json}"
+  role   = aws_iam_role.codedeploy.name
+  policy = data.aws_iam_policy_document.codedeploy.json
 }
 
 resource "aws_codedeploy_app" "this" {
@@ -308,10 +308,10 @@ resource "aws_codedeploy_app" "this" {
 }
 
 resource "aws_codedeploy_deployment_group" "this" {
-  app_name               = "${aws_codedeploy_app.this.name}"
+  app_name               = aws_codedeploy_app.this.name
   deployment_group_name  = "example-deploy-group"
   deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
-  service_role_arn       = "${aws_iam_role.codedeploy.arn}"
+  service_role_arn       = aws_iam_role.codedeploy.arn
 
   blue_green_deployment_config {
     deployment_ready_option {
@@ -320,12 +320,13 @@ resource "aws_codedeploy_deployment_group" "this" {
 
     terminate_blue_instances_on_deployment_success {
       action = "TERMINATE"
+      termination_wait_time_in_minutes = 5
     }
   }
 
   ecs_service {
-    cluster_name = "${aws_ecs_cluster.this.name}"
-    service_name = "${aws_ecs_service.this.name}"
+    cluster_name = aws_ecs_cluster.this.name
+    service_name = aws_ecs_service.this.name
   }
 
   deployment_style {
@@ -336,15 +337,15 @@ resource "aws_codedeploy_deployment_group" "this" {
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = ["${aws_lb_listener.this.arn}"]
+        listener_arns = [aws_lb_listener.this.arn]
       }
 
       target_group {
-        name = "${aws_lb_target_group.this.*.name[0]}"
+        name = aws_lb_target_group.this[0].name
       }
 
       target_group {
-        name = "${aws_lb_target_group.this.*.name[1]}"
+        name = aws_lb_target_group.this[1].name
       }
     }
   }
@@ -352,10 +353,10 @@ resource "aws_codedeploy_deployment_group" "this" {
 
 resource "aws_codepipeline" "this" {
   name     = "example-pipeline"
-  role_arn = "${aws_iam_role.pipeline.arn}"
+  role_arn = aws_iam_role.pipeline.arn
 
   artifact_store {
-    location = "${aws_s3_bucket.this.bucket}"
+    location = aws_s3_bucket.this.bucket
     type     = "S3"
   }
 
@@ -371,10 +372,11 @@ resource "aws_codepipeline" "this" {
       output_artifacts = ["source"]
 
       configuration = {
-        OAuthToken = "${var.github_token}"
-        Owner      = "jjruescas"
-        Repo       = "green-blue-ecs-example"
-        Branch     = "master"
+        OAuthToken = var.github_token
+        # In GitHub the path to a repo is owner/repo_name
+        Owner      = var.github_repo_owner 
+        Repo       = var.github_repo_name
+        Branch     = var.github_repo_branch
       }
     }
   }
@@ -391,8 +393,8 @@ resource "aws_codepipeline" "this" {
       input_artifacts  = ["source"]
       output_artifacts = ["build"]
 
-      configuration {
-        ProjectName = "${aws_codebuild_project.this.name}"
+      configuration = {
+        ProjectName = aws_codebuild_project.this.name
       }
     }
   }
@@ -408,12 +410,13 @@ resource "aws_codepipeline" "this" {
       version         = "1"
       input_artifacts = ["build"]
 
-      configuration {
-        ApplicationName                = "${aws_codedeploy_app.this.name}"
-        DeploymentGroupName            = "${aws_codedeploy_deployment_group.this.deployment_group_name}"
+      configuration = {
+        ApplicationName                = aws_codedeploy_app.this.name
+        DeploymentGroupName            = aws_codedeploy_deployment_group.this.deployment_group_name
         TaskDefinitionTemplateArtifact = "build"
         AppSpecTemplateArtifact        = "build"
       }
     }
   }
 }
+

@@ -1,5 +1,6 @@
 /vendor/
 /logs/*
+*.log
 .env
 **/.terraform/*
 *.tfstate
