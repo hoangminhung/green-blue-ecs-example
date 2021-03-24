@@ -1,5 +1,9 @@
+resource "random_id" "s3" {
+  byte_length = 8
+}
+
 resource "aws_s3_bucket" "this" {
-  bucket        = "example-app-codepipeline01"
+  bucket        = "example-app-codepipeline01-${random_id.s3.hex}"
   force_destroy = true
 }
 
@@ -319,7 +323,7 @@ resource "aws_codedeploy_deployment_group" "this" {
     }
 
     terminate_blue_instances_on_deployment_success {
-      action = "TERMINATE"
+      action                           = "TERMINATE"
       termination_wait_time_in_minutes = 5
     }
   }
@@ -374,9 +378,9 @@ resource "aws_codepipeline" "this" {
       configuration = {
         OAuthToken = var.github_token
         # In GitHub the path to a repo is owner/repo_name
-        Owner      = var.github_repo_owner 
-        Repo       = var.github_repo_name
-        Branch     = var.github_repo_branch
+        Owner  = var.github_repo_owner
+        Repo   = var.github_repo_name
+        Branch = var.github_repo_branch
       }
     }
   }

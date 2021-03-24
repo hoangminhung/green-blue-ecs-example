@@ -3,7 +3,7 @@ locals {
 }
 
 data "aws_ecr_repository" "this" {
-  name = "jjruescas/${local.container_name}"
+  name = "hung-test-codepipeline"
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -173,7 +173,7 @@ resource "aws_ecs_service" "this" {
   }
 
   lifecycle {
-    ignore_changes = [task_definition,load_balancer]
+    ignore_changes = [task_definition, load_balancer]
   }
 
   depends_on = [aws_lb_listener.this]

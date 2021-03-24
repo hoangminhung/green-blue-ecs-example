@@ -7,3 +7,4 @@
 *.tfstate.backup
 *.tfvars
 tags
+/terraform/main.tf

@@ -1,8 +1,8 @@
 locals {
   subnets = {
     "${var.region}a" = "172.16.0.0/21"
-    "${var.region}b" = "172.16.8.0/21"
-    "${var.region}c" = "172.16.16.0/21"
+    "${var.region}c" = "172.16.8.0/21"
+    "${var.region}d" = "172.16.16.0/21"
   }
 }
 
