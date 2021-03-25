@@ -420,6 +420,8 @@ resource "aws_codepipeline" "this" {
         DeploymentGroupName            = aws_codedeploy_deployment_group.this.deployment_group_name
         TaskDefinitionTemplateArtifact = "build"
         AppSpecTemplateArtifact        = "build"
+        Image1ArtifactName             = "build"
+        Image1ContainerName            = "IMAGE1_NAME"
       }
     }
   }
