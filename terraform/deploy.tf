@@ -65,6 +65,7 @@ data "aws_iam_policy_document" "pipeline" {
       "codedeploy:GetDeployment",
       "codedeploy:GetDeploymentConfig",
       "codedeploy:RegisterApplicationRevision",
+      "codestar-connections:UseConnection",
     ]
 
     resources = ["*"]
