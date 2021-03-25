@@ -21,11 +21,10 @@ phases:
       - echo Build completed on `date`
       - echo Pushing the Docker images...
       - echo $REPOSITORY_URI:$IMAGE_TAG
-      - export 
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - envsubst < taskdef.json > taskdef.json
       - envsubst < appspec_template.yaml > appspec1.yaml
       - " cat appspec1.yaml > appspec.yaml "
+      - " cat taskdef.json > taskdef.json "
       - printf '{"Version":"1.0","ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
 artifacts:
   files:

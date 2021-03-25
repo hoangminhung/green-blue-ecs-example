@@ -1,6 +1,4 @@
 {
-  "placementConstraints": [],
-  "revision": 3,
   "executionRoleArn": "arn:aws:iam::188492694258:role/ecs-example-execution-role",
   "cpu": "256",
   "networkMode": "awsvpc",
@@ -25,34 +23,7 @@
       ]
     }
   ],
-  "requiresAttributes": [
-    {
-      "name": "com.amazonaws.ecs.capability.ecr-auth"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.task-iam-role"
-    },
-    {
-      "name": "ecs.capability.execution-role-ecr-pull"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
-    },
-    {
-      "name": "ecs.capability.task-eni"
-    }
-  ],
   "memory": "512",
-  "compatibilities": [
-    "EC2",
-    "FARGATE"
-  ],
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-1:188492694258:task-definition/green-blue-ecs-example:3",
-  "status": "ACTIVE",
-  "volumes": [],
   "taskRoleArn": "arn:aws:iam::188492694258:role/ecs-example-task-role",
   "family": "green-blue-ecs-example",
   "requiresCompatibilities": [
