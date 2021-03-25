@@ -150,6 +150,8 @@ data "aws_iam_policy_document" "codebuild" {
     effect = "Allow"
 
     actions = [
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
       "ecr:InitiateLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:CompleteLayerUpload",

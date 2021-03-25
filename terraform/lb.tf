@@ -61,6 +61,10 @@ resource "aws_lb_listener" "this" {
     type             = "forward"
     target_group_arn = aws_lb_target_group.this[0].arn
   }
+
+  lifecycle {
+    ignore_changes = [default_action]
+  }
 }
 
 resource "aws_lb_listener_rule" "this" {
@@ -74,6 +78,10 @@ resource "aws_lb_listener_rule" "this" {
   condition {
     field  = "path-pattern"
     values = ["/*"]
+  }
+
+  lifecycle {
+    ignore_changes = [action]
   }
 }
 
