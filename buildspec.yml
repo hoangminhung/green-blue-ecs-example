@@ -22,9 +22,11 @@ phases:
       - echo Pushing the Docker images...
       - echo $REPOSITORY_URI:$IMAGE_TAG
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - aws ecs describe-task-definition --task-definition green-blue-ecs-example | jq '.taskDefinition' > taskdef.json
+      - envsubst < taskdef.json > taskdef.json
       - envsubst < appspec_template.yaml > appspec.yaml
+      - printf '{"Version":"1.0","ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
 artifacts:
   files:
+    - imageDetail.json
     - appspec.yaml
     - taskdef.json
