@@ -159,7 +159,7 @@ data "aws_iam_policy_document" "codebuild" {
       "ecr:PutImage",
     ]
 
-    resources = [data.aws_ecr_repository.this.arn]
+    resources = ["*"]
   }
 
   statement {
@@ -198,10 +198,11 @@ resource "aws_codebuild_project" "this" {
   }
 
   environment {
-    compute_type    = "BUILD_GENERAL1_SMALL"
-    image           = "aws/codebuild/docker:18.09.0"
-    type            = "LINUX_CONTAINER"
-    privileged_mode = true
+    compute_type                = "BUILD_GENERAL1_SMALL"
+    image                       = "aws/codebuild/standard:5.0"
+    image_pull_credentials_type = "CODEBUILD"
+    type                        = "LINUX_CONTAINER"
+    privileged_mode             = true
 
     environment_variable {
       name  = "REPOSITORY_URI"
