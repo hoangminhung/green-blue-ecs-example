@@ -21,6 +21,8 @@ phases:
       - echo $ENV1
       - echo $ENV2
       - echo $ENV3
+      - envsubst < appspec_template.yaml > appspec1.yaml
+      - cat appspec1.yaml
       - envsubst < template-env.yaml > .env
       - cat .env
       - echo Building the Docker image...
