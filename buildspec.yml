@@ -1,5 +1,10 @@
 version: 0.2
 
+env:
+  parameter-store:
+    ENV1: "/stg/REACT_APP_GOOGLE_API"
+    ENV2: "/stg/REACT_APP_IOS_APP_ID"
+    ENV3: "/stg/REDIS_SERVER_URL"
 phases:
   install:
     commands:
@@ -13,6 +18,9 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - echo $ENV1
+      - echo $ENV2
+      - echo $ENV3
       - echo Building the Docker image...
       - aws ecr get-login-password --region ap-northeast-1 | docker login -u AWS --password-stdin 188492694258.dkr.ecr.ap-northeast-1.amazonaws.com/hizakurige-basic-image-repository-stg:nginx-latest-1.19
       - docker build -t test:latest .
