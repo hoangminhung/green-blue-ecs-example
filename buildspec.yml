@@ -21,6 +21,8 @@ phases:
       - echo $ENV1
       - echo $ENV2
       - echo $ENV3
+      - envsubst < template-env.yaml > .env
+      - cat .env
       - echo Building the Docker image...
       - aws ecr get-login-password --region ap-northeast-1 | docker login -u AWS --password-stdin 188492694258.dkr.ecr.ap-northeast-1.amazonaws.com/hizakurige-basic-image-repository-stg:nginx-latest-1.19
       - docker build -t test:latest .
